@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="package" version="3.0">
+	<name>Polls Package</name>
+	<author>Bruno Batista</author>
+	<creationDate>November 2012</creationDate>
+	<copyright>Copyright (C) 2012 AtomTech, Inc. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>bruno@atomtech.com.br</authorEmail>
+	<authorUrl>http://www.atomtech.com.br</authorUrl>
+	<version>3.0.0</version>
+	<description>Polls package to combine multiple extensions</description>
+	<packagename>polls</packagename>
+	<url>http://www.atomtech.com.br</url>
+	<packager>Polls Package Team</packager>
+	<packagerurl>http://www.atomtech.com.br</packagerurl>
+	<update>http://www.atomtech.com.br/update</update>
+	<files folder="packages">
+		<file type="component" id="polls">com_polls</file>
+		<file type="module" id="polls" client="site">mod_polls</file>
+	</files>
+</extension>
