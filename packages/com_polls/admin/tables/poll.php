@@ -58,13 +58,6 @@ class PollsTablePoll extends JTable
 			$array['metadata'] = (string) $registry;
 		}
 
-		if (isset($array['images']) && is_array($array['images']))
-		{
-			$registry = new JRegistry;
-			$registry->loadArray($array['images']);
-			$array['images'] = (string) $registry;
-		}
-
 		return parent::bind($array, $ignore);
 	}
 

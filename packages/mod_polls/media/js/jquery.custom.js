@@ -3,7 +3,6 @@ jQuery.noConflict();
 (function ($) {
 	$(function () {
 		var pollId = $('#poll_id').val();
-		var answerId = $('input:radio[name=answers]:checked').val();
 
 		if ($.cookie('__poll') == pollId) {
 			$('.polls-answers').hide();
@@ -23,7 +22,9 @@ jQuery.noConflict();
 			$('.polls-vote').removeClass('disabled');
 		})
 
-		$('.polls-vote').click(function () {
+		$('.polls-vote').live('click', function () {
+			var answerId = $('input:radio[name=answers]:checked').val();
+
 			if ($('input:radio[name=answers]:checked').length > 0) {
 				$.ajax({
 					type: 'GET',

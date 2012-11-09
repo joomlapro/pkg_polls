@@ -275,6 +275,48 @@ class PollsModelPoll extends JModelAdmin
 	 */
 	public function save($data)
 	{
+		// Initialiase variables.
+		$pk = (!empty($data['id'])) ? $data['id'] : (int) $this->getState($this->getName() . '.id');
+
+		// Get an instance of the this table.
+		$table = $this->getTable();
+
+		$answers = (array) $data['answers'];
+
+		unset($data['answers']);
+
+		// Load the row if saving an existing poll.
+		if ($pk > 0)
+		{
+			$table->load($pk);
+		}
+
+		// Bind the data.
+		if (!$table->bind($data))
+		{
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Check the data.
+		if (!$table->check())
+		{
+			$this->setError($table->getError());
+			return false;
+		}
+
+		// Store the data.
+		if (!$table->store())
+		{
+			$this->setError($table->getError());
+			return false;
+		}
+
+		$this->setState('poll.id', $table->id);
+
+		$properties = $table->getProperties(1);
+		$value = JArrayHelper::toObject($properties, 'JObject');
+
 		// Update the database.
 		$db = JFactory::getDbo();
 		$query = $db->getQuery(true);
@@ -282,14 +324,14 @@ class PollsModelPoll extends JModelAdmin
 		// Delete all answers.
 		$query->delete();
 		$query->from($db->quoteName('#__polls_answers'));
-		$query->where('poll_id = ' . (int) $data['id']);
+		$query->where('poll_id = ' . (int) $value->id);
 
 		// Set the query and execute the delete.
 		$db->setQuery($query);
 
 		if ($db->execute())
 		{
-			foreach ($data['answers'] as $i => $answer)
+			foreach ($answers as $i => $answer)
 			{
 				$fields = array();
 				$values = array();
@@ -319,7 +361,7 @@ class PollsModelPoll extends JModelAdmin
 				// Create the base insert statement.
 				$query->insert($db->quoteName('#__polls_answers'));
 				$query->columns(array($db->quoteName('poll_id'), implode(', ', $fields)));
-				$query->values($db->quote($data['id']) . ', ' . implode(', ', $values));
+				$query->values($db->quote($value->id) . ', ' . implode(', ', $values));
 
 				// Set the query and execute the insert.
 				$db->setQuery($query);
@@ -336,9 +378,7 @@ class PollsModelPoll extends JModelAdmin
 			}
 		}
 
-		unset($data['answers']);
-
-		return parent::save($data);
+		return true;
 	}
 
 	/**
